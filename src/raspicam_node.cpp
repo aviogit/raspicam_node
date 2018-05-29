@@ -275,6 +275,9 @@ static void camera_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buff
 			msg.is_bigendian = 0;
 			msg.step = pData->pstate->width*3;
 			msg.data.insert( msg.data.end(), pData->buffer[pData->frame & 1], &(pData->buffer[pData->frame & 1][pData->id]) );
+			if (msg.width == 1920 && msg.height == 1080)
+				msg.data.resize(msg.data.size()-46080);
+			//ROS_INFO("Publishing image_raw: %d %d %d %d\n", msg.width, msg.height, msg.data.size(), msg.step);
 			image_pub.publish(msg);
 			c_info.header.seq = pData->frame;
 			c_info.header.stamp = msg.header.stamp;
